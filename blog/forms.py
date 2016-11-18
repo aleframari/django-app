@@ -1,6 +1,6 @@
 # coding=utf-8
 from django import forms
-from .models import Usuario, Libro
+from .models import Usuario, Libro, Prestamo
 
 class UsuarioForm(forms.ModelForm):
     class Meta:
