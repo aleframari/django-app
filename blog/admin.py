@@ -1,4 +1,5 @@
 from django.contrib import admin
-from .models import Postear
+from blog.models import Usuario, UsuarioAdmin, Libro, LibroAdmin
 
-admin.site.register(Postear)
+admin.site.register(Usuario,UsuarioAdmin)
+admin.site.register(Libro, LibroAdmin)

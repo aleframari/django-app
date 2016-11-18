@@ -1,38 +1,17 @@
-from django.shortcuts import render,redirect
-from django.utils import timezone
-from .models import Postear
-from .forms import PostearForm
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
+from django.contrib import messages
+from .forms import UsuarioForm
+from blog.models import Usuario, Prestamo
 
-def post_list(request):
-    posts = Postear.objects.filter(fecha_publicacion__lte=timezone.now()).order_by('fecha_publicacion')
-    return render(request, 'blog/post_list.html', {'posts': posts})
-
-def detalle_articulo(request, pk):
-    post = get_object_or_404(Postear, pk=pk)
-    return render(request, 'blog/detalle_articulo.html', {'post': post})
-
-def postear_nuevo(request):
+def usuario_nueva(request):
     if request.method == "POST":
-        formulario = PostearForm(request.POST)
+        formulario = UsuarioForm(request.POST)
         if formulario.is_valid():
-            postear = formulario.save(commit=False)
-            postear.autor = request.user
-            postear.fecha_publicacion = timezone.now()
-            postear.save()
-            return redirect('blog.views.detalle_articulo', pk=postear.pk)
+            usuario = Usuario.objects.create(nombre=formulario.cleaned_data['nombre'], dpi = formulario.cleaned_data['dpi'])
+            for libro_id in request.POST.getlist('libro'):
+               prestamo = Prestamo(libro_id=libro_id, usuario_id = Usuario.id)
+               prestamo.save()
+            messages.add_message(request, messages.SUCCESS, 'Pelicula Guardada Exitosamente')
     else:
-        formulario = PostearForm()
-    return render(request, 'blog/editar_articulo.html', {'formulario': formulario})
-def editar_articulo(request, pk):
-    articulo = get_object_or_404(Postear, pk=pk)
-    if request.method == "POST":
-        formulario = PostearForm(request.POST, instance=articulo)
-        if formulario.is_valid():
-            articulo = formulario.save(commit=False)
-            articulo.autor = request.user
-            articulo.save()
-            return redirect('blog.views.detalle_articulo', pk=articulo.pk)
-    else:
-        formulario = PostearForm(instance=articulo)
-    return render(request, 'blog/editar_articulo.html', {'formulario': formulario})
+        formulario = UsuarioForm()
+    return render(request, 'blog/usuario_editar.html', {'formulario': formulario})

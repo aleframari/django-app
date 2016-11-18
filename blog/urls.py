@@ -1,9 +1,8 @@
-from django.conf.urls import include, url
+from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r'^$', views.post_list),
-    url(r'^post/(?P<pk>[0-9]+)/$', views.detalle_articulo),
-    url(r'^post/new/$', views.postear_nuevo,name='postear_nuevo'),
-    url(r'^post/(?P<pk>[0-9]+)/edit/$', views.editar_articulo, name='editar_articulo'),
+    #url(r'^$', views.lista_peliculas),
+    url(r'^$', views.usuario_nueva),
+    url(r'^usario/nueva/$', views.usuario_nueva, name='pelicula_nueva'),
 ]
